@@ -2,10 +2,11 @@
 
 from . import db
 
-
-class Book(db.Model):
+class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    author = db.Column(db.String(200), nullable=False)
-    year_published = db.Column(db.Integer, nullable=False)
-    types = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    game_relationship = db.Column(db.Integer, db.ForeignKey('Game.id'), nullable=True)
+
+
+

@@ -1,5 +1,5 @@
 // function to get all books from the API
-async function getBooks() {
+async function get_games() {
     try {
         const response = await axios.get('http://127.0.0.1:5000/books');
         const booksList = document.getElementById('books-list');
@@ -7,17 +7,17 @@ async function getBooks() {
 
         response.data.books.forEach(book => {
             booksList.innerHTML += `
-                <div class="book-card">
-                    <h3>${book.title}</h3>
-                    <p>Author: ${book.author}</p>
-                    <p>Year: ${book.year_published}</p>
-                    <p>Type: ${book.types}</p>
+                <div class="game-card">
+                    <h3>${game.title}</h3>
+                    <p>Author: ${game.genre}</p>
+                    <p>Year: ${game.price}</p>
+                    <p>Type: ${game.quantity}</p>
                 </div>
             `;
         });
     } catch (error) {
-        console.error('Error fetching books:', error);
-        alert('Failed to load books');
+        console.error('Error fetching games:', error);
+        alert('Failed to load games');
     }
 }
 
@@ -34,7 +34,7 @@ async function addBook() {
             author: author,
             year_published: year_published,
             types: types
-        });
+        }); 
         
         // Clear form fields
         document.getElementById('book-title').value = '';

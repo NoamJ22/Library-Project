@@ -2,9 +2,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime, timedelta
 from models import db
-from models.user import User
-from models.book import Book
-from models.loans import Loan
+from models.Admin import Admin
+from models.Customer import Customer
+from models.Game import Game
 
 
 app = Flask(__name__)  # - create a flask instance
@@ -23,7 +23,7 @@ db.init_app(app)  # initializes the databsewith the flask application
 @app.route('/books', methods=['POST'])
 def add_book():
     data = request.json  # this is parsing the JSON data from the request body
-    new_book = Book(
+    new_book = Game(
         title=data['title'],  # Set the title of the new book.
         author=data['author'],  # Set the author of the new book.
         year_published=data['year_published'],
@@ -37,28 +37,28 @@ def add_book():
 
 
 # a decorator to Define a new route that handles GET requests
-@app.route('/books', methods=['GET'])
-def get_books():
+@app.route('/Games', methods=['GET'])
+def get_games():
     try:
-        books = Book.query.all()                    # Get all the books from the database
+        games = Game.query.all()                    # Get all the books from the database
 
         # Create empty list to store formatted book data we get from the database
-        books_list = []
+        game_list = []
 
-        for book in books:                         # Loop through each book from database
-            book_data = {                          # Create a dictionary for each book
-                'id': book.id,
-                'title': book.title,
-                'author': book.author,
-                'year_published': book.year_published,
-                'types': book.types
+        for game in games:                         # Loop through each book from database
+            game_data = {                          # Create a dictionary for each book
+                'id': game.id,
+                'title': game.title,
+                'price': game.price,
+                'quantity': game.quantity,
+                'loan_status': game.loan_status
             }
             # Add the iterated book dictionary to our list
-            books_list.append(book_data)
+            game_list.append(game_data)
 
         return jsonify({                           # Return JSON response
             'message': 'Books retrieved successfully',
-            'books': books_list
+            'books': game_list
         }), 200
 
     except Exception as e:
