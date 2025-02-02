@@ -22,35 +22,35 @@ async function get_games() {
 }
 
 // function to add a new book to the database
-async function addBook() {
-    const title = document.getElementById('book-title').value;
-    const author = document.getElementById('book-author').value;
-    const year_published = document.getElementById('book-year-published').value;
-    const types = document.getElementById('book-type').value;
+async function add_game() {
+    const title = document.getElementById('game-title').value;
+    const genre = document.getElementById('game-genre').value;
+    const price = document.getElementById('game-price').value;
+    const quantity = document.getElementById('game-quantity').value;
 
     try {
         await axios.post('http://127.0.0.1:5000/books', {
             title: title,
-            author: author,
-            year_published: year_published,
-            types: types
+            genre: genre,
+            price: price,
+            quantity: quantity
         }); 
         
         // Clear form fields
-        document.getElementById('book-title').value = '';
-        document.getElementById('book-author').value = '';
-        document.getElementById('book-year-published').value = '';
-        document.getElementById('book-type').value = '';
+        document.getElementById('game-title').value = '';
+        document.getElementById('game-genre').value = '';
+        document.getElementById('game-price').value = '';
+        document.getElementById('game-quantity').value = '';
 
         // Refresh the books list
-        getBooks();
+        get_games();
         
-        alert('Book added successfully!');
+        alert('Game added successfully!');
     } catch (error) {
-        console.error('Error adding book:', error);
-        alert('Failed to add book');
+        console.error('Error adding Game:', error);
+        alert('Failed to add Game');
     }
 }
 
 // Load all books when page loads
-document.addEventListener('DOMContentLoaded', getBooks);
+document.addEventListener('DOMContentLoaded', get_games);

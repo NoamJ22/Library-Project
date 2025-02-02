@@ -21,19 +21,19 @@ db.init_app(app)  # initializes the databsewith the flask application
 
 # this is a decorator from the flask module to define a route for for adding a book, supporting POST requests.(check the decorator summary i sent you and also the exercises)
 @app.route('/books', methods=['POST'])
-def add_book():
+def add_game():
     data = request.json  # this is parsing the JSON data from the request body
-    new_book = Game(
+    new_game = Game(
         title=data['title'],  # Set the title of the new book.
-        author=data['author'],  # Set the author of the new book.
-        year_published=data['year_published'],
+        genre=data['genre'],  # Set the author of the new book.
+        price=data['price'],
         # Set the types(fantasy, thriller, etc...) of the new book.
-        types=data['types']
+        types=data['quantity']
         # add other if needed...
     )
-    db.session.add(new_book)  # add the bew book to the database session
+    db.session.add(new_game)  # add the bew book to the database session
     db.session.commit()  # commit the session to save in the database
-    return jsonify({'message': 'Book added to database.'}), 201
+    return jsonify({'message': 'game added to database.'}), 201
 
 
 # a decorator to Define a new route that handles GET requests
