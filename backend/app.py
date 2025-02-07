@@ -1,95 +1,125 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
-from datetime import datetime, timedelta
 from models import db
 from models.Admin import Admin
-from models.Customer import Customer
 from models.Game import Game
 
+app = Flask(__name__)  # Create a Flask instance
+app.secret_key = 'your_secret_key_here'  # Secret key for session handling
 
-app = Flask(__name__)  # - create a flask instance
-# - enable all routes, allow requests from anywhere (optional - not recommended for security)
+# Enable all routes, allow requests from anywhere (not recommended for production)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-
-# Specifies the database connection URL. In this case, it's creating a SQLite database
-# named 'library.db' in your project directory. The three slashes '///' indicate a
-# relative path from the current directory
+# Specifies the database connection URL (SQLite in this case)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
-db.init_app(app)  # initializes the databsewith the flask application
+db.init_app(app)  # Initialize the database with the Flask application
 
 
-# this is a decorator from the flask module to define a route for for adding a book, supporting POST requests.(check the decorator summary i sent you and also the exercises)
-@app.route('/books', methods=['POST'])
+# Define the login route
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json  # Get JSON data from the request
+    username = data.get('username')
+    password = data.get('password')
+
+    # Check if both username and password are provided
+    if not username or not password:
+        return jsonify({'error': 'Username and password are required'}), 400
+
+    # Find the admin by username
+    admin = Admin.query.filter_by(username=username).first()
+
+    if admin and admin.password == password:  # Verify the password (simple comparison for now)
+        session['user_id'] = admin.id  # Store user ID in session
+        session['username'] = admin.username  # Store username in session
+        return jsonify({'message': 'Login successful'}), 200
+    else:
+        return jsonify({'error': 'Invalid credentials'}), 401
+
+
+# Route to register a new admin (for simplicity, this is assuming admin registration)
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.json  # Parse incoming JSON request data
+    username = data.get('username')
+    password = data.get('password')
+
+    # Check if username and password are provided
+    if not username or not password:
+        return jsonify({'error': 'Username and password are required'}), 400
+
+    # Check if the username already exists
+    existing_admin = Admin.query.filter_by(username=username).first()
+    if existing_admin:
+        return jsonify({'error': 'Username already exists'}), 400
+
+    # Create new admin user
+    new_admin = Admin(username=username, password=password)
+    db.session.add(new_admin)
+    db.session.commit()
+
+    # Log the user in automatically after registration
+    session['user_id'] = new_admin.id
+    session['username'] = new_admin.username
+
+    return jsonify({'message': 'Registration successful, logged in automatically'}), 201
+
+
+# Define a route for adding a game (requires login)
+@app.route('/games', methods=['POST'])
 def add_game():
-    data = request.json  # this is parsing the JSON data from the request body
+    if 'user_id' not in session:  # Check if the user is logged in (session exists)
+        return jsonify({'error': 'You must log in to perform this action'}), 403
+
+    data = request.json  # Parse JSON data from the request body
     new_game = Game(
-        title=data['title'],  # Set the title of the new book.
-        genre=data['genre'],  # Set the author of the new book.
+        title=data['title'],
+        genre=data['genre'],
         price=data['price'],
-        # Set the types(fantasy, thriller, etc...) of the new book.
-        types=data['quantity']
-        # add other if needed...
+        quantity=data['quantity']
     )
-    db.session.add(new_game)  # add the bew book to the database session
-    db.session.commit()  # commit the session to save in the database
-    return jsonify({'message': 'game added to database.'}), 201
+    db.session.add(new_game)
+    db.session.commit()
+    return jsonify({'message': 'Game added to database.'}), 201
 
 
-# a decorator to Define a new route that handles GET requests
-@app.route('/Games', methods=['GET'])
+# Define a route to get all games (requires login)
+@app.route('/games', methods=['GET'])
 def get_games():
-    try:
-        games = Game.query.all()                    # Get all the books from the database
+    if 'user_id' not in session:  # Check if the user is logged in (session exists)
+        return jsonify({'error': 'You must log in to perform this action'}), 403
 
-        # Create empty list to store formatted book data we get from the database
+    try:
+        games = Game.query.all()
         game_list = []
 
-        for game in games:                         # Loop through each book from database
-            game_data = {                          # Create a dictionary for each book
+        for game in games:
+            game_data = {
                 'id': game.id,
                 'title': game.title,
                 'price': game.price,
                 'quantity': game.quantity,
                 'loan_status': game.loan_status
             }
-            # Add the iterated book dictionary to our list
             game_list.append(game_data)
 
-        return jsonify({                           # Return JSON response
-            'message': 'Books retrieved successfully',
-            'books': game_list
+        return jsonify({
+            'message': 'Games retrieved successfully',
+            'games': game_list
         }), 200
 
     except Exception as e:
-        return jsonify({
-            'error': 'Failed to retrieve books',
-            'message': str(e)
-        }), 500                                    #
+        return jsonify({'error': 'Failed to retrieve games', 'message': str(e)}), 500
+
+
+# Route to log out (clear session)
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()  # Clear the session to log the user out
+    return jsonify({'message': 'Logged out successfully'}), 200
 
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # Create all database tables defined in your  models(check the models folder)
-
-    # with app.test_client() as test:
-    #     response = test.post('/books', json={  # Make a POST request to /books endpoint with book  data
-    #         'title': 'Harry Potter',
-    #         'author': 'J.K. Rowling',
-    #         'year_published': 1997,
-    #         'types': '1'  # lets say 1 is fantasy
-    #     })
-    #     print("Testing /books endpoint:")
-    #     # print the response from the server
-    #     print(f"Response: {response.data}")
-
-    #     #  GET test here
-    #     get_response = test.get('/books')
-    #     print("\nTesting GET /books endpoint:")
-    #     print(f"Response: {get_response.data}")
-
-    app.run(debug=True)  # start the flask application in debug mode
-
-    # DONT FORGET TO ACTIVATE THE ENV FIRST:
-    # /env/Scripts/activate - for windows
-    # source ./env/bin/activate - - mac
+        db.create_all()  # Create database tables if they don't exist already
+    app.run(debug=True)
