@@ -49,7 +49,7 @@ async function handleAuth(action) {
 // Function to log in and store session
 async function login(username, password) {
     try {
-        const response = await axios.post('http://127.0.0.1:5000/login', { username, password });
+        const response = await axios.post('http://127.0.0.1:5500/login', { username, password });
         alert(response.data.message);
         localStorage.setItem('loggedIn', true); 
         localStorage.setItem('username', username); 
@@ -65,7 +65,7 @@ async function login(username, password) {
 // Function to handle user registration
 async function register(username, password) {
     try {
-        const response = await axios.post('http://127.0.0.1:5000/register', { username, password });
+        const response = await axios.post('http://127.0.0.1:5500/register', { username, password });
         alert('BOOM')
         alert(response.data.message);
         localStorage.setItem('loggedIn', true); 
@@ -82,7 +82,7 @@ async function register(username, password) {
 // Function to log out and clear session
 async function logout() {
     try {
-        await axios.post('http://127.0.0.1:5000/logout');
+        await axios.post('http://127.0.0.1:5500/logout');
         alert('Logged out successfully');
         localStorage.removeItem('loggedIn'); // Clear login status
         document.getElementById('main-section').classList.add('hidden');  // Hide the main section
@@ -96,10 +96,10 @@ async function logout() {
 // Function to add a new game to the database (protected route)
 async function add_game() {
     // Ensure that user is logged in
-    if (localStorage.getItem('loggedIn') !== 'true') {
-        alert('You must log in or register first!');
-        return;
-    }
+    // if (localStorage.getItem('loggedIn') !== 'true') {
+    //     alert('You must log in or register first!');
+    //     return;
+    // }
 
     const title = document.getElementById('game-title').value;
     const genre = document.getElementById('game-genre').value;
@@ -113,7 +113,7 @@ async function add_game() {
     }
 
     try {
-        await axios.post('http://127.0.0.1:5000/games', {
+        await axios.post('http://127.0.0.1:5500/games', {
             title: title,
             genre: genre,
             price: price,
@@ -145,7 +145,7 @@ async function get_games() {
     }
 
     try {
-        const response = await axios.get('http://127.0.0.1:5000/games');
+        const response = await axios.get('http://127.0.0.1:5500/games');
         const gamesList = document.getElementById('games-list');
         gamesList.innerHTML = ''; // Clear existing list
 
@@ -172,3 +172,4 @@ document.addEventListener('DOMContentLoaded', () => {
         get_games();
     }
 });
+

@@ -3,12 +3,13 @@ from flask_cors import CORS
 from models import db
 from models.Admin import Admin
 from models.Game import Game
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)  # Create a Flask instance
 app.secret_key = 'your_secret_key_here'  # Secret key for session handling
 
 # Enable all routes, allow requests from anywhere (not recommended for production)
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}}, supports_credentials=True)
 
 
 # Specifies the database connection URL (SQLite in this case)
@@ -40,6 +41,9 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json  # Parse incoming JSON request data
+    if not data:
+        return jsonify({'error': 'No JSON data provided'}), 400
+
     username = data.get('username')
     password = data.get('password')
 
@@ -52,8 +56,11 @@ def register():
     if existing_admin:
         return jsonify({'error': 'Username already exists'}), 400
 
+    # Hash the password before saving it
+    hashed_password = generate_password_hash(password)
+
     # Create new admin user
-    new_admin = Admin(username=username, password=password)
+    new_admin = Admin(username=username, password=hashed_password)
     db.session.add(new_admin)
     db.session.commit()
 
@@ -62,6 +69,7 @@ def register():
     session['username'] = new_admin.username
 
     return jsonify({'message': 'Registration successful'}), 201
+
 
 # Route to get all games (requires login)
 @app.route('/games', methods=['GET'])
@@ -99,6 +107,7 @@ def logout():
     return jsonify({'message': 'Logged out successfully'}), 200
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Create database tables if they don't exist already
-    app.run(debug=True)
+    # with app.app_context():
+    #     db.create_all()  # Create database tables if they don't exist already
+    # app.run(debug=True)
+    flask.run()
