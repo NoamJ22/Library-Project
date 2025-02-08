@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Library Management System</title>
-    <link rel="stylesheet" href="static/css/styles.css" />
+    <title>Game Loans</title>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <div class="container">
@@ -16,11 +16,9 @@
         <div id="auth-form">
           <input type="text" id="username" placeholder="Username" />
           <input type="password" id="password" placeholder="Password" />
-          <button id="auth-action" onclick="handleAuth()">Login</button>
-          <p id="toggle-text">Don't have an account? <a href="javascript:void(0);" onclick="toggleAuthForm()">Register</a></p>
+          <button id="auth-action" onclick="handleAuth()">Register</button>
         </div>
       </div>
-
       <!-- Main Section (only visible after login) -->
       <div id="main-section" class="hidden">
         <div class="header">
@@ -28,7 +26,7 @@
           <button onclick="logout()">Logout</button>
         </div>
 
-        <div class="books-section">
+        <div class="games-section">
           <h2>Add New Game</h2>
           <div class="form-group">
             <input type="text" id="game-title" placeholder="Title" />

@@ -24,18 +24,13 @@ function toggleToMain() {
 // Function to handle both login and registration based on button text
 async function handleAuth(action) {
     let username, password;
-    if (action === 'login') {
+    action = 'register'
+    if (action == 'login') {
         username = document.getElementById('username').value;
         password = document.getElementById('password').value;
-    } else if (action === 'register') {
-        username = document.getElementById('reg-username').value;
-        password = document.getElementById('reg-password').value;
-        const confirmPassword = document.getElementById('reg-password-confirm').value;
-
-        if (password !== confirmPassword) {
-            alert("Passwords don't match!");
-            return;
-        }
+    } else if (action == 'register') {
+        username = document.getElementById('username').value;
+        password = document.getElementById('password').value;
     }
 
     // Ensure both fields are filled
@@ -44,7 +39,7 @@ async function handleAuth(action) {
         return;
     }
 
-    if (action === 'login') {
+    if (action == 'login') {
         await login(username, password);
     } else {
         await register(username, password);
@@ -71,11 +66,12 @@ async function login(username, password) {
 async function register(username, password) {
     try {
         const response = await axios.post('http://127.0.0.1:5000/register', { username, password });
+        alert('BOOM')
         alert(response.data.message);
         localStorage.setItem('loggedIn', true); 
         localStorage.setItem('username', username); 
-        document.getElementById('main-section').classList.remove('hidden');
-        document.getElementById('auth-section').classList.add('hidden');
+        localStorage.setItem("password", password);
+        toggleToMain();
         get_games();
     } catch (error) {
         console.error('Registration failed:', error);
