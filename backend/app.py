@@ -3,23 +3,20 @@ from flask_cors import CORS
 from models import db
 from models.Admin import Admin
 from models.Game import Game
+from models.Customer import Customer
 from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)  # Create a Flask instance
-app.secret_key = 'your_secret_key_here'  # Secret key for session handling
+#app.secret_key = 'your_secret_key_here'  # Secret key for session handling
 
 # Enable all routes, allow requests from anywhere (not recommended for production)
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}}, supports_credentials=True)
 
 
 # Specifies the database connection URL (SQLite in this case)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Game.db'
 db.init_app(app)  # Initialize the database with the Flask application
 
-
-@app.route('/')
-def index():
-    return send_from_directory('frontend', 'index.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -105,10 +102,12 @@ def get_games():
 
 
 # Route to log out (clear session)
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['POST, GET'])
 def logout():
     session.clear()  # Clear the session to log the user out
     return jsonify({'message': 'Logged out successfully'}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=5500)
+    with app.app_context():
+        db.create_all()  # Create all database tables defined in your  models(check the models folder)
+        app.run(debug=True)  # start the flask application in debug mode

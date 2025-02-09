@@ -16,6 +16,7 @@ function toggleAuthForm() {
     }
 }
 
+
 function toggleToMain() {
     document.getElementById('auth-section').classList.add('hidden');
     document.getElementById('main-section').classList.remove('hidden');
@@ -24,7 +25,7 @@ function toggleToMain() {
 // Function to handle both login and registration based on button text
 async function handleAuth(action) {
     let username, password;
-    action = 'register'
+    action = 'login'
     if (action === 'login') {
         username = document.getElementById('username').value;
         password = document.getElementById('password').value;
@@ -52,9 +53,7 @@ async function login(username, password) {
         const response = await axios.post('http://127.0.0.1:5500/login', { username, password });
         alert(response.data.message);
         localStorage.setItem('loggedIn', true); 
-        localStorage.setItem('username', username); 
-        document.getElementById('main-section').classList.remove('hidden');
-        document.getElementById('auth-section').classList.add('hidden');
+        toggleToMain();
         get_games();
     } catch (error) {
         console.error('Login failed:', error);
@@ -65,6 +64,7 @@ async function login(username, password) {
 // Function to handle user registration
 async function register(username, password) {
     try {
+
         const response = await axios.post('http://127.0.0.1:5500/register', { username, password });
         alert('BOOM')
         alert(response.data.message);

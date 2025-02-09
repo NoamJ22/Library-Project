@@ -6,7 +6,7 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
-    game_relationship = db.Column(db.Integer, db.ForeignKey('Game.id'), nullable=True)
+    #game_relationship = db.Column(db.Integer, db.ForeignKey('Game.id'), nullable=True)
 
 
 
