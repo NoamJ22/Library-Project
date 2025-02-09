@@ -17,6 +17,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
 db.init_app(app)  # Initialize the database with the Flask application
 
 
+@app.route('/')
+def index():
+    return send_from_directory('frontend', 'index.html')
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json  # Get JSON data from the request
@@ -107,7 +111,4 @@ def logout():
     return jsonify({'message': 'Logged out successfully'}), 200
 
 if __name__ == '__main__':
-    # with app.app_context():
-    #     db.create_all()  # Create database tables if they don't exist already
-    # app.run(debug=True)
-    flask.run()
+    app.run(debug=True, host='127.0.0.1', port=5500)

@@ -25,10 +25,10 @@ function toggleToMain() {
 async function handleAuth(action) {
     let username, password;
     action = 'register'
-    if (action == 'login') {
+    if (action === 'login') {
         username = document.getElementById('username').value;
         password = document.getElementById('password').value;
-    } else if (action == 'register') {
+    } else if (action === 'register') {
         username = document.getElementById('username').value;
         password = document.getElementById('password').value;
     }
@@ -39,7 +39,7 @@ async function handleAuth(action) {
         return;
     }
 
-    if (action == 'login') {
+    if (action === 'login') {
         await login(username, password);
     } else {
         await register(username, password);
