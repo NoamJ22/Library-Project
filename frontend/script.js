@@ -39,6 +39,10 @@ async function handleAuth(action) {
 
 // Function to log in and store session
 async function login(username, password) {
+    if (document.getElementById('auth-section').classList = 'hidden'){
+        document.getElementById('auth-section').classList.remove('hidden');
+    document.getElementById('main-section').classList.add('hidden');
+    }
     try {
         // Ensure the request body is correctly formatted
         const response = await axios.post(
@@ -53,7 +57,7 @@ async function login(username, password) {
         alert(response.data.message);
         localStorage.setItem('loggedIn', true);
         toggleToMain();
-        //get_games();
+        get_games();
     } catch (error) {
         console.error('Login failed:', error.response ? error.response.data : error);  // More detailed error info
         alert('Login failed');
