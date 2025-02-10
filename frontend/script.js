@@ -24,15 +24,9 @@ function toggleToMain() {
 
 // Function to handle both login and registration based on button text
 async function handleAuth(action) {
-    let username, password;
-    action = 'login'
-    if (action === 'login') {
-        username = document.getElementById('username').value;
-        password = document.getElementById('password').value;
-    } else if (action === 'register') {
-        username = document.getElementById('username').value;
-        password = document.getElementById('password').value;
-    }
+    //let username, password;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
     // Ensure both fields are filled
     if (!username || !password) {
@@ -40,26 +34,33 @@ async function handleAuth(action) {
         return;
     }
 
-    if (action === 'login') {
-        await login(username, password);
-    } else {
-        await register(username, password);
-    }
+    await login(username, password);
 }
 
 // Function to log in and store session
 async function login(username, password) {
     try {
-        const response = await axios.post('http://127.0.0.1:5500/login', { username, password });
+        // Ensure the request body is correctly formatted
+        const response = await axios.post(
+            'http://127.0.0.1:5000/login', 
+            { "username": username, 
+            "password": password
+        }
+            //{ headers: { 'Content-Type': 'application/json' } } // Ensure the Content-Type is set to application/json
+        );
+        
+        console.log(response);  // Check the response data and status
         alert(response.data.message);
-        localStorage.setItem('loggedIn', true); 
+        localStorage.setItem('loggedIn', true);
         toggleToMain();
-        get_games();
+        //get_games();
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('Login failed:', error.response ? error.response.data : error);  // More detailed error info
         alert('Login failed');
     }
 }
+
+
 
 // Function to handle user registration
 async function register(username, password) {

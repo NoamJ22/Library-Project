@@ -7,11 +7,11 @@ from models.Customer import Customer
 from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)  # Create a Flask instance
-#app.secret_key = 'your_secret_key_here'  # Secret key for session handling
+app.secret_key = 'your_secret_key_here'  # Secret key for session handling
 
 # Enable all routes, allow requests from anywhere (not recommended for production)
-CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}}, supports_credentials=True)
-
+#CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
 # Specifies the database connection URL (SQLite in this case)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Game.db'
@@ -20,20 +20,24 @@ db.init_app(app)  # Initialize the database with the Flask application
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.json  # Get JSON data from the request
-    username = data.get('username')
-    password = data.get('password')
+    data = request.json
+    print(f"Received data: {data}")  # Log the incoming data
 
-    # Check if both username and password are provided
+    username = data['username']
+    password = data['password']
+
     if not username or not password:
         return jsonify({'error': 'Username and password are required'}), 400
 
-    # Find the admin by username
     admin = Admin.query.filter_by(username=username).first()
+    if admin:
+        print(f"Found admin: {admin.username}")
+    else:
+        print("Admin not found")
 
-    if admin and admin.password == password:  # Verify the password (simple comparison for now)
-        session['user_id'] = admin.id  # Store user ID in session
-        session['username'] = admin.username  # Store username in session
+    if admin and admin.password == password:
+        session['user_id'] = admin.id
+        session['username'] = admin.username
         return jsonify({'message': 'Login successful'}), 200
     else:
         return jsonify({'error': 'Invalid credentials'}), 401
@@ -110,4 +114,19 @@ def logout():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create all database tables defined in your  models(check the models folder)
-        app.run(debug=True)  # start the flask application in debug mode
+
+
+    # with app.test_client() as test:
+    #     response = test.post('/books', json={
+    #         'title': 'Harry Potter',
+    #         'author': 'J.K. Rowling',
+    #         'year_published': 1997,
+    #         'types': '1'  # lets say 1 is fantasy
+    #     })
+    #     print("Testing /books endpoint:")
+    #     # print the response from the server
+    #     print(f"Response: {response.data}")
+
+
+
+        app.run(debug=True, port=5000)  # start the flask application in debug mode
