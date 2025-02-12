@@ -1,3 +1,4 @@
+
 // Function to toggle between Login and Register form
 function toggleAuthForm() {
     const loginForm = document.getElementById('login-form');
@@ -19,7 +20,7 @@ function toggleAuthForm() {
 
 function toggleToMain() {
     document.getElementById('auth-section').classList.add('hidden');
-    document.getElementById('main-section').classList.remove('hidden');
+    //document.getElementById('main-section').classList.remove('hidden');
 }
 
 // Function to handle both login and registration based on button text
@@ -57,6 +58,7 @@ async function login(username, password) {
         alert(response.data.message);
         localStorage.setItem('loggedIn', true);
         toggleToMain();
+        get_games();
     } catch (error) {
         console.error('Login failed:', error.response ? error.response.data : error);  // More detailed error info
         alert('Login failed');
@@ -65,27 +67,28 @@ async function login(username, password) {
 
 
 
-// Function to handle user registration
-async function register(username, password) {
-    try {
+// // Function to handle user registration
+// async function register(username, password) {
+//     try {
 
-        const response = await axios.post('http://127.0.0.1:5500/register', { username, password });
-        alert(response.data.message);
-        localStorage.setItem('loggedIn', true); 
-        localStorage.setItem('username', username); 
-        localStorage.setItem("password", password);
-        toggleToMain();
-        get_games();
-    } catch (error) {
-        console.error('Registration failed:', error);
-        alert(error.response.data.error);
-    }
-}
+//         const response = await axios.post('http://127.0.0.1:5500/register', { username, password });
+//         alert('BOOM')
+//         alert(response.data.message);
+//         localStorage.setItem('loggedIn', true); 
+//         localStorage.setItem('username', username); 
+//         localStorage.setItem("password", password);
+//         toggleToMain();
+//         get_games();
+//     } catch (error) {
+//         console.error('Registration failed:', error);
+//         alert(error.response.data.error);
+//     }
+// }
 
 // Function to log out and clear session
 async function logout() {
     try {
-        await axios.post('http://127.0.0.1:5500/logout');
+        await axios.post('http://127.0.0.1:5000/logout');
         alert('Logged out successfully');
         localStorage.removeItem('loggedIn'); // Clear login status
         document.getElementById('main-section').classList.add('hidden');  // Hide the main section
@@ -128,6 +131,7 @@ async function add_game() {
         document.getElementById('game-genre').value = '';
         document.getElementById('game-price').value = '';
         document.getElementById('game-quantity').value = '';
+
         // Refresh the games list
         get_games();
 
@@ -141,7 +145,7 @@ async function add_game() {
 
 // Function to get all games from the API (protected route)
 async function get_games() {
-    document.getElementById('main-section').classList.remove('hidden');
+    //document.getElementById('main-section').classList.remove('hidden');
     if (!localStorage.getItem('loggedIn')) {
         alert('You must log or register in first!');
         return;

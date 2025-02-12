@@ -103,6 +103,23 @@ def get_games():
 
     except Exception as e:
         return jsonify({'error': 'Failed to retrieve games', 'message': str(e)}), 500
+    
+
+# this is a decorator from the flask module to define a route for for adding a book, supporting POST requests.(check the decorator summary i sent you and also the exercises)
+@app.route('/add', methods=['POST'])
+def add_game():
+    data = request.json  # this is parsing the JSON data from the request body
+    new_game = Game(
+        title=data['title'],  # Set the title of the new book.
+        genre=data['genre'],  # Set the author of the new book.
+        price=data['price'],
+        # Set the types(fantasy, thriller, etc...) of the new book.
+        quantity=data['quantity']
+        # add other if needed...
+    )
+    db.session.add(new_game)  # add the bew book to the database session
+    db.session.commit()  # commit the session to save in the database
+    return jsonify({'message': 'Book added to database.'}), 201
 
 
 # Route to log out (clear session)

@@ -1,0 +1,23 @@
+<!-- Main Section (only visible after login) -->
+<div id="main-section"> 
+    <div class="header">
+      <h1>Game Store Management System</h1>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="games-section">
+      <h2>Add New Game</h2>
+      <div class="form-group">
+        <input type="text" id="game-title" placeholder="Title" />
+        <input type="text" id="game-genre" placeholder="Genre" />
+        <input type="number" id="game-price" placeholder="Price" />
+        <input type="number" id="game-quantity" placeholder="Quantity" />
+        <button onclick="add_game()">Add Game</button>
+      </div>
+
+      <h2>All Games</h2>
+      <div id="games-list" class="games-grid"></div>
+
+      <h2>Loaned Games</h2>
+      <div id="loaned-games-list" class="games-grid"></div>
+    </div>
