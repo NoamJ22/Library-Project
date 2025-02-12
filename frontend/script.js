@@ -57,7 +57,6 @@ async function login(username, password) {
         alert(response.data.message);
         localStorage.setItem('loggedIn', true);
         toggleToMain();
-        get_games();
     } catch (error) {
         console.error('Login failed:', error.response ? error.response.data : error);  // More detailed error info
         alert('Login failed');
@@ -71,7 +70,6 @@ async function register(username, password) {
     try {
 
         const response = await axios.post('http://127.0.0.1:5500/register', { username, password });
-        alert('BOOM')
         alert(response.data.message);
         localStorage.setItem('loggedIn', true); 
         localStorage.setItem('username', username); 
@@ -118,7 +116,7 @@ async function add_game() {
     }
 
     try {
-        await axios.post('http://127.0.0.1:5500/games', {
+        await axios.post('http://127.0.0.1:5000/add', {
             title: title,
             genre: genre,
             price: price,
@@ -130,7 +128,6 @@ async function add_game() {
         document.getElementById('game-genre').value = '';
         document.getElementById('game-price').value = '';
         document.getElementById('game-quantity').value = '';
-
         // Refresh the games list
         get_games();
 
@@ -144,13 +141,14 @@ async function add_game() {
 
 // Function to get all games from the API (protected route)
 async function get_games() {
+    document.getElementById('main-section').classList.remove('hidden');
     if (!localStorage.getItem('loggedIn')) {
         alert('You must log or register in first!');
         return;
     }
 
     try {
-        const response = await axios.get('http://127.0.0.1:5500/games');
+        const response = await axios.get('http://127.0.0.1:5000/games');
         const gamesList = document.getElementById('games-list');
         gamesList.innerHTML = ''; // Clear existing list
 
@@ -164,6 +162,7 @@ async function get_games() {
                 </div>
             `;
         });
+        console.log(response.data.games);
     } catch (error) {
         console.error('Error fetching games:', error);
         alert('Failed to load games');

@@ -10,8 +10,8 @@ app = Flask(__name__)  # Create a Flask instance
 app.secret_key = 'your_secret_key_here'  # Secret key for session handling
 
 # Enable all routes, allow requests from anywhere (not recommended for production)
-#CORS(app, resources={r"/*": {"origins": "*"}})
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
+#CORS(app)
 
 # Specifies the database connection URL (SQLite in this case)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Game.db'
@@ -79,8 +79,8 @@ def register():
 # Route to get all games (requires login)
 @app.route('/games', methods=['GET'])
 def get_games():
-    if 'user_id' not in session:  # Check if the user is logged in (session exists)
-        return jsonify({'error': 'You must log in to perform this action'}), 403
+    # if 'user_id' not in session:  # Check if the user is logged in (session exists)
+    #     return jsonify({'error': 'You must log in to perform this action'}), 403
 
     try:
         games = Game.query.all()
@@ -113,6 +113,8 @@ def logout():
 
 if __name__ == '__main__':
     with app.app_context():
+        games = Game.query.all()
+        print(games)
         db.create_all()  # Create all database tables defined in your  models(check the models folder)
 
 
