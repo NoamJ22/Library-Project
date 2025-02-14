@@ -114,8 +114,8 @@ def add_game():
         genre=data['genre'],  # Set the author of the new book.
         price=data['price'],
         # Set the types(fantasy, thriller, etc...) of the new book.
-        quantity=data['quantity']
-        # add other if needed...
+        quantity=data['quantity'],
+        loan_status= False
     )
     db.session.add(new_game)  # add the bew book to the database session
     db.session.commit()  # commit the session to save in the database
