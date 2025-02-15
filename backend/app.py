@@ -83,13 +83,14 @@ def get_games():
     #     return jsonify({'error': 'You must log in to perform this action'}), 403
 
     try:
-        games = Game.query.all()
+        games =  Game.query.filter_by(loan_status=False).all()
         game_list = []
 
         for game in games:
             game_data = {
                 'id': game.id,
                 'title': game.title,
+                'genre':game.genre,
                 'price': game.price,
                 'quantity': game.quantity,
                 'loan_status': game.loan_status
@@ -122,8 +123,37 @@ def add_game():
     return jsonify({'message': 'Book added to database.'}), 201
 
 
+# Route to get all games (requires login)
+@app.route('/loaned', methods=['GET'])
+def get_loaned_games():
+    # if 'user_id' not in session:  # Check if the user is logged in (session exists)
+    #     return jsonify({'error': 'You must log in to perform this action'}), 403
+
+    try:
+        loaned_games = Game.query.filter_by(loan_status=True).all()
+        game_list = []
+
+        for game in loaned_games:
+            game_data = {
+                'id': game.id,
+                'title': game.title,
+                'genre':game.genre,
+                'price': game.price,
+                'quantity': game.quantity,
+                'loan_status': game.loan_status
+            }
+            game_list.append(game_data)
+
+        return jsonify({
+            'message': 'loaned Games retrieved successfully',
+            'games': game_list
+        }), 200
+
+    except Exception as e:
+        return jsonify({'error': 'Failed to retrieve loaned games', 'message': str(e)}), 500
+
 # Route to log out (clear session)
-@app.route('/logout', methods=['POST, GET'])
+@app.route('/logout', methods=['POST', 'GET'])
 def logout():
     session.clear()  # Clear the session to log the user out
     return jsonify({'message': 'Logged out successfully'}), 200

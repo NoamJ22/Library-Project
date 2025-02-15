@@ -133,6 +133,7 @@ async function add_game() {
         document.getElementById('game-quantity').value = '';
 
         // Refresh the games list
+        get_loaned_games();
         get_games();
 
         alert('Game added successfully!');
@@ -156,7 +157,7 @@ async function get_games() {
         const gamesList = document.getElementById('games-list');
         gamesList.innerHTML = ''; // Clear existing list
 
-        response.data.games.forEach(game => {
+        response.data.games.forEach(game =>  {
             gamesList.innerHTML += `
                 <div class="game-card">
                     <h3>${game.title}</h3>
@@ -173,11 +174,46 @@ async function get_games() {
     }
 }
 
+async function get_loaned_games() {
+    if (!localStorage.getItem('loggedIn')) {
+        alert('You must log or register first!');
+        return;
+    }
+
+    try {
+        const response = await axios.get('http://127.0.0.1:5000/loaned');
+        const loansList = document.getElementById('loaned-games-list');
+        loansList.innerHTML = ''; // Clear existing list
+
+        // Filter games where loan_status is 1
+        const loanedGames = response.data.games.filter(game => game.loan_status === true);
+
+        loanedGames.forEach(game => {
+            loansList.innerHTML += `
+                <div class="game-card">
+                    <h3>${game.title}</h3>
+                    <p>Genre: ${game.genre}</p>
+                    <p>Price: ${game.price}</p>
+                    <p>Quantity: ${game.quantity}</p>
+                </div>
+            `;
+        });
+
+        console.log('Loaned games list:', loanedGames);
+        console.log(loanedGames);
+    } catch (error) {
+        console.error('Error fetching games:', error);
+        alert('Failed to load games');
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('loggedIn')) {
         document.getElementById('main-section').classList.remove('hidden');
         document.getElementById('auth-section').classList.add('hidden');
         get_games();
+        get_loaned_games();
     }
 });
 
