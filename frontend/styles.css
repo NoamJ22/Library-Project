@@ -1,160 +1,173 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Courier New', Courier, monospace;  /* Pixelated, retro look */
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-  }
-  
-  .container {
+    background-color: #0f0f0f;  /* Dark background for an oppressive, grimy feel */
+    color: #f1f1f1;  /* Light gray text for better contrast */
+}
+
+/* Container */
+.container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-  }
-  
-  h1, h2 {
-    color: #333;
-  }
-  
-  /* Authentication Section */
-  #auth-section {
-    background-color: #fff;
+}
+
+/* Headings */
+h1, h2 {
+    color: #FF00FF;  /* Neon purple text, matching a cyberpunk theme */
+    font-family: 'Courier New', Courier, monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Authentication Section */
+#auth-section {
+    background-color: #222222;  /* Dark, ominous background */
     padding: 40px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(255, 0, 255, 0.3);  /* Glowing shadow effect */
     max-width: 400px;
     margin: 100px auto;
-  }
-  
-  #auth-header {
+}
+
+#auth-header {
     text-align: center;
-    color: #007BFF;
-  }
-  
-  #auth-form {
+    color: #FF00FF;  /* Same neon color for consistency */
+    font-size: 24px;
+}
+
+#auth-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
-  }
-  
-  #auth-form input {
-    padding: 10px;
+}
+
+#auth-form input {
+    padding: 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #666;
     border-radius: 4px;
-  }
-  
-  #auth-action {
-    background-color: #007BFF;
-    color: white;
+    background-color: #333;
+    color: #f1f1f1;
+}
+
+#auth-action {
+    background-color: #FF00FF;  /* Neon purple button */
+    color: #222;
     padding: 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
-  
-  #auth-action:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Main Section (after login) */
-  .main-section {
+    font-weight: bold;
+}
+
+#auth-action:hover {
+    background-color: #ff00b3;
+}
+
+/* Main Section (after login) */
+.main-section {
     display: none;
-  }
-  
-  .main-section.visible {
+}
+
+.main-section.visible {
     display: block;
-  }
-  
-  .header {
+}
+
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 40px;
-  }
-  
-  .header h1 {
+}
+
+.header h1 {
     margin: 0;
-  }
-  
-  .header button {
-    background-color: #dc3545;
-    color: white;
+}
+
+.header button {
+    background-color: #ff0000;  /* Red for danger, cyberpunk vibes */
+    color: #fff;
     padding: 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
-  
-  .header button:hover {
-    background-color: #c82333;
-  }
-  
-  /* Games Section */
-  .games-section {
-    background-color: #fff;
+}
+
+.header button:hover {
+    background-color: #d40000;
+}
+
+/* Games Section */
+.games-section {
+    background-color: #222222;  /* Dark background for the section */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-group {
+    box-shadow: 0 4px 10px rgba(255, 0, 255, 0.3);  /* Glowing effect */
+}
+
+.form-group {
     display: grid;
     gap: 15px;
     margin-bottom: 30px;
-  }
-  
-  .form-group input {
+}
+
+.form-group input {
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #666;
     border-radius: 4px;
-  }
-  
-  .form-group button {
-    background-color: #28a745;
-    color: white;
+    background-color: #333;
+    color: #f1f1f1;
+}
+
+.form-group button {
+    background-color: #00ff00;  /* Neon green for "add" button */
+    color: #222;
     padding: 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
-  
-  .form-group button:hover {
-    background-color: #218838;
-  }
-  
-  h2 {
+}
+
+.form-group button:hover {
+    background-color: #00cc00;
+}
+
+h2 {
     margin-top: 30px;
-  }
-  
-  .games-grid {
+    font-size: 22px;
+}
+
+.games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
-  }
-  
-  .games-grid div {
-    background-color: #f9f9f9;
+}
+
+.games-grid div {
+    background-color: #333333;  /* Dark background for each game */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .games-grid div p {
+    box-shadow: 0 4px 10px rgba(255, 0, 255, 0.3);  /* Glowing effect */
+}
+
+.games-grid div p {
     margin: 10px 0;
-  }
-  
-  .games-grid div button {
-    background-color: #ffc107;
+}
+
+.games-grid div button {
+    background-color: #ff4500;  /* Orange-red color for buttons */
     color: white;
     padding: 8px 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
-  
-  .games-grid div button:hover {
-    background-color: #e0a800;
-  }
-  
+}
+
+.games-grid div button:hover {
+    background-color: #ff0000;
+}
+

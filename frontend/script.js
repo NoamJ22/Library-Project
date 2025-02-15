@@ -59,6 +59,7 @@ async function login(username, password) {
         localStorage.setItem('loggedIn', true);
         toggleToMain();
         get_games();
+        get_loaned_games();
     } catch (error) {
         console.error('Login failed:', error.response ? error.response.data : error);  // More detailed error info
         alert('Login failed');
@@ -181,7 +182,6 @@ async function delete_game() {
 async function get_games() {
     //document.getElementById('main-section').classList.remove('hidden');
     if (localStorage.getItem('loggedIn') !== 'true') {
-        alert('You must login first!');
         return;
     }
 
@@ -208,10 +208,9 @@ async function get_games() {
 }
 
 async function get_loaned_games() {
-    // if (localStorage.getItem('loggedIn') !== 'true') {
-    //     alert('You must login first!');
-    //     return;
-    // }
+    if (localStorage.getItem('loggedIn') !== 'true') {
+        return;
+    }
 
     try {
         const response = await axios.get('http://127.0.0.1:5000/loaned');
