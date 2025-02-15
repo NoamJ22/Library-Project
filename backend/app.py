@@ -123,6 +123,26 @@ def add_game():
     return jsonify({'message': 'Book added to database.'}), 201
 
 
+@app.route('/delete', methods=['POST'])
+def delete_game():
+    data = request.json
+    title = data['title']
+    
+    # Query the database for the game with the given title
+    game = Game.query.filter_by(title=title).first()  # Use filter_by for simpler equality queries
+    if game.loan_status == True:
+        return jsonify({"message": "Cannot delete a loaned game"}), 201
+
+    if game:
+        # If the game is found, delete it
+        db.session.delete(game)
+        db.session.commit()
+        return jsonify({"message": "Game deleted successfully!"}), 200
+    else:
+        return jsonify({"message": "Game not found!"}), 404
+
+
+
 # Route to get all games (requires login)
 @app.route('/loaned', methods=['GET'])
 def get_loaned_games():

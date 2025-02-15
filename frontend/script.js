@@ -90,7 +90,7 @@ async function logout() {
     try {
         await axios.post('http://127.0.0.1:5000/logout');
         alert('Logged out successfully');
-        localStorage.removeItem('loggedIn'); // Clear login status
+        localStorage.setItem('loggedIn', false); // Clear login status
         document.getElementById('main-section').classList.add('hidden');  // Hide the main section
         document.getElementById('auth-section').classList.remove('hidden');  // Show auth section
     } catch (error) {
@@ -101,11 +101,11 @@ async function logout() {
 
 // Function to add a new game to the database (protected route)
 async function add_game() {
-    // Ensure that user is logged in
-    // if (localStorage.getItem('loggedIn') !== 'true') {
-    //     alert('You must log in or register first!');
-    //     return;
-    // }
+  //  Ensure that user is logged in
+  if (localStorage.getItem('loggedIn') !== 'true') {
+    alert('You must login first!');
+    return;
+    }
 
     const title = document.getElementById('game-title').value;
     const genre = document.getElementById('game-genre').value;
@@ -135,6 +135,7 @@ async function add_game() {
         // Refresh the games list
         get_loaned_games();
         get_games();
+        get_loaned_games();
 
         alert('Game added successfully!');
     } catch (error) {
@@ -143,12 +144,44 @@ async function add_game() {
     }
 }
 
+async function delete_game() {
+    if (localStorage.getItem('loggedIn') !== 'true') {
+        alert('You must login first!');
+        return;
+    }
+
+    const title = document.getElementById('delete-game-title').value;
+    if (!title) {
+        alert('Please write the name of the game!');
+        return;
+    }
+
+    try {
+        await axios.post('http://127.0.0.1:5000/delete', {
+            title: title,
+        });
+
+        // Clear form fields
+        document.getElementById('game-title').value = '';
+
+
+        // Refresh the games list
+        get_loaned_games();
+        get_games();
+
+        alert('Game deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting game:', error);
+        alert('Failed to delete game');
+    }
+}
+
 
 // Function to get all games from the API (protected route)
 async function get_games() {
     //document.getElementById('main-section').classList.remove('hidden');
-    if (!localStorage.getItem('loggedIn')) {
-        alert('You must log or register in first!');
+    if (localStorage.getItem('loggedIn') !== 'true') {
+        alert('You must login first!');
         return;
     }
 
@@ -175,10 +208,10 @@ async function get_games() {
 }
 
 async function get_loaned_games() {
-    if (!localStorage.getItem('loggedIn')) {
-        alert('You must log or register first!');
-        return;
-    }
+    // if (localStorage.getItem('loggedIn') !== 'true') {
+    //     alert('You must login first!');
+    //     return;
+    // }
 
     try {
         const response = await axios.get('http://127.0.0.1:5000/loaned');
