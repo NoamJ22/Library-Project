@@ -24,7 +24,7 @@ function toggleToMain() {
 }
 
 // Function to handle both login and registration based on button text
-async function handleAuth(action) {
+async function handleAuth() {
     //let username, password;
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -40,10 +40,10 @@ async function handleAuth(action) {
 
 // Function to log in and store session
 async function login(username, password) {
-    if (document.getElementById('auth-section').classList = 'hidden'){
-        document.getElementById('auth-section').classList.remove('hidden');
-    document.getElementById('main-section').classList.add('hidden');
-    }
+    // if (document.getElementById('auth-section').classList = 'hidden'){
+    //     document.getElementById('auth-section').classList.remove('hidden');
+    // document.getElementById('main-section').classList.add('hidden');
+    // }
     try {
         // Ensure the request body is correctly formatted
         const response = await axios.post(

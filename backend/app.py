@@ -43,37 +43,37 @@ def login():
         return jsonify({'error': 'Invalid credentials'}), 401
 
 
-@app.route('/register', methods=['POST'])
-def register():
-    data = request.json  # Parse incoming JSON request data
-    if not data:
-        return jsonify({'error': 'No JSON data provided'}), 400
+# @app.route('/register', methods=['POST'])
+# def register():
+#     data = request.json  # Parse incoming JSON request data
+#     if not data:
+#         return jsonify({'error': 'No JSON data provided'}), 400
 
-    username = data.get('username')
-    password = data.get('password')
+#     username = data.get('username')
+#     password = data.get('password')
 
-    # Check if username and password are provided
-    if not username or not password:
-        return jsonify({'error': 'Username and password are required'}), 400
+#     # Check if username and password are provided
+#     if not username or not password:
+#         return jsonify({'error': 'Username and password are required'}), 400
 
-    # Check if the username already exists
-    existing_admin = Admin.query.filter_by(username=username).first()
-    if existing_admin:
-        return jsonify({'error': 'Username already exists'}), 400
+#     # Check if the username already exists
+#     existing_admin = Admin.query.filter_by(username=username).first()
+#     if existing_admin:
+#         return jsonify({'error': 'Username already exists'}), 400
 
-    # Hash the password before saving it
-    hashed_password = generate_password_hash(password)
+#     # Hash the password before saving it
+#     hashed_password = generate_password_hash(password)
 
-    # Create new admin user
-    new_admin = Admin(username=username, password=hashed_password)
-    db.session.add(new_admin)
-    db.session.commit()
+#     # Create new admin user
+#     new_admin = Admin(username=username, password=hashed_password)
+#     db.session.add(new_admin)
+#     db.session.commit()
 
-    # After successful registration, automatically log the user in by setting session data
-    session['user_id'] = new_admin.id
-    session['username'] = new_admin.username
+#     # After successful registration, automatically log the user in by setting session data
+#     session['user_id'] = new_admin.id
+#     session['username'] = new_admin.username
 
-    return jsonify({'message': 'Registration successful'}), 201
+#     return jsonify({'message': 'Registration successful'}), 201
 
 
 # Route to get all games (requires login)
