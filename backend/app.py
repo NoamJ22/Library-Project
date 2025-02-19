@@ -47,30 +47,42 @@ def login():
 def add_games_from_csv():
     try:
         with open(r'C:\Users\noame\Desktop\pypro\Library-Project\backend\game_data.csv', mode='r') as file:
-            # Manually define the headers, because there is no header in the CSV file
             column_headers = ['title', 'genre', 'price', 'quantity']
             csv_reader = csv.reader(file)  # Use csv.reader instead of DictReader
             
             games_added = 0
+            games_skipped = 0  # To count how many games are skipped because they already exist
             for row in csv_reader:
                 if len(row) == 4:  # Ensure there are exactly 4 values in the row
                     # Create a dictionary to map each value to the correct header
                     game_data = dict(zip(column_headers, row))
                     print(f"Reading row: {game_data}")  # Debug log
 
-                    new_game = Game(
-                        title=game_data['title'],
-                        genre=game_data['genre'],
-                        price=int(game_data['price']),  # Convert to integer
-                        quantity=int(game_data['quantity']),  # Convert to integer
-                        loan_status=False  # Default loan status
-                    )
-                    db.session.add(new_game)
-                    games_added += 1
+                    # Check if a game with this title already exists in the database
+                    existing_game = Game.query.filter_by(title=game_data['title']).first()
 
+                    if existing_game:
+                        # If the game already exists, skip it
+                        print(f"Game '{game_data['title']}' already exists, skipping.")
+                        games_skipped += 1
+                    else:
+                        # If the game doesn't exist, add it to the database
+                        new_game = Game(
+                            title=game_data['title'],
+                            genre=game_data['genre'],
+                            price=int(game_data['price']),  # Convert to integer
+                            quantity=int(game_data['quantity']),  # Convert to integer
+                            loan_status=False  # Default loan status
+                        )
+                        db.session.add(new_game)
+                        games_added += 1
+
+            # Commit all the new games at once
             db.session.commit()
 
-        return jsonify({'message': f'{games_added} games added from CSV successfully!'}), 201
+        return jsonify({
+            'message': f'{games_added} games added from CSV successfully, {games_skipped} games were skipped (already exist in the database).'
+        }), 201
 
     except Exception as e:
         db.session.rollback()  # Rollback any changes if there is an error
