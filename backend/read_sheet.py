@@ -1,16 +1,28 @@
-from selenium import webdriver  # Main Se
+# import csv
+# import app
+# from flask import Flask, request, jsonify
+# from models import db
+# from models.Game import Game
 
-# lenium package for browser automation
-# Manages ChromeDriver service
-from selenium.webdriver.chrome.service import Service
+# # Route to add games from a CSV file
+# @app.route('/add_games_from_csv', methods=['POST'])
+# def add_games_from_csv():
+#     try:
+#         with open('games_data.csv', mode='r') as file:
+#             csv_reader = csv.DictReader(file)
+#             for row in csv_reader:
+#                 new_game = Game(
+#                     title=row['title'],  # From column 'title'
+#                     genre=row['genre'],  # From column 'genre'
+#                     price=int(row['price']),  # Convert to integer
+#                     quantity=int(row['quantity']),  # Convert to integer
+#                     loan_status=False  # Default loan status
+#                 )
+#                 db.session.add(new_game)
+        
+#         db.session.commit()
 
-# Chrome-specific configuration options
-from selenium.webdriver.chrome.options import Options
-
-# Provides locator strategies (ID, CLASS, etc.)
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait  # Implements explicit waits
-
-# Conditions for WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time  # For adding delays between actions
+#         return jsonify({'message': 'Games added from CSV successfully!'}), 201
+    
+#     except Exception as e:
+#         return jsonify({'error': 'Failed to add games from CSV', 'message': str(e)}), 500

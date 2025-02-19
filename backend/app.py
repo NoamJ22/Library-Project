@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, session
+import csv
 from flask_cors import CORS
 from models import db
 from models.Admin import Admin
@@ -43,37 +44,38 @@ def login():
         return jsonify({'error': 'Invalid credentials'}), 401
 
 
-# @app.route('/register', methods=['POST'])
-# def register():
-#     data = request.json  # Parse incoming JSON request data
-#     if not data:
-#         return jsonify({'error': 'No JSON data provided'}), 400
+def add_games_from_csv():
+    try:
+        with open(r'C:\Users\noame\Desktop\pypro\Library-Project\backend\game_data.csv', mode='r') as file:
+            # Manually define the headers, because there is no header in the CSV file
+            column_headers = ['title', 'genre', 'price', 'quantity']
+            csv_reader = csv.reader(file)  # Use csv.reader instead of DictReader
+            
+            games_added = 0
+            for row in csv_reader:
+                if len(row) == 4:  # Ensure there are exactly 4 values in the row
+                    # Create a dictionary to map each value to the correct header
+                    game_data = dict(zip(column_headers, row))
+                    print(f"Reading row: {game_data}")  # Debug log
 
-#     username = data.get('username')
-#     password = data.get('password')
+                    new_game = Game(
+                        title=game_data['title'],
+                        genre=game_data['genre'],
+                        price=int(game_data['price']),  # Convert to integer
+                        quantity=int(game_data['quantity']),  # Convert to integer
+                        loan_status=False  # Default loan status
+                    )
+                    db.session.add(new_game)
+                    games_added += 1
 
-#     # Check if username and password are provided
-#     if not username or not password:
-#         return jsonify({'error': 'Username and password are required'}), 400
+            db.session.commit()
 
-#     # Check if the username already exists
-#     existing_admin = Admin.query.filter_by(username=username).first()
-#     if existing_admin:
-#         return jsonify({'error': 'Username already exists'}), 400
+        return jsonify({'message': f'{games_added} games added from CSV successfully!'}), 201
 
-#     # Hash the password before saving it
-#     hashed_password = generate_password_hash(password)
-
-#     # Create new admin user
-#     new_admin = Admin(username=username, password=hashed_password)
-#     db.session.add(new_admin)
-#     db.session.commit()
-
-#     # After successful registration, automatically log the user in by setting session data
-#     session['user_id'] = new_admin.id
-#     session['username'] = new_admin.username
-
-#     return jsonify({'message': 'Registration successful'}), 201
+    except Exception as e:
+        db.session.rollback()  # Rollback any changes if there is an error
+        print(f"Error occurred: {str(e)}")  # Log the error to console
+        return jsonify({'error': 'Failed to add games from CSV', 'message': str(e)}), 500
 
 
 # Route to get all games (requires login)
@@ -180,22 +182,9 @@ def logout():
 
 if __name__ == '__main__':
     with app.app_context():
-        games = Game.query.all()
-        print(games)
-        db.create_all()  # Create all database tables defined in your  models(check the models folder)
+        db.create_all()  # Create all database tables defined in your models
 
-
-    # with app.test_client() as test:
-    #     response = test.post('/books', json={
-    #         'title': 'Harry Potter',
-    #         'author': 'J.K. Rowling',
-    #         'year_published': 1997,
-    #         'types': '1'  # lets say 1 is fantasy
-    #     })
-    #     print("Testing /books endpoint:")
-    #     # print the response from the server
-    #     print(f"Response: {response.data}")
-
-
-
-        app.run(debug=True, port=5000)  # start the flask application in debug mode
+        # Call the add_games_from_csv() function to load the games from the CSV
+        add_games_from_csv()  # This will add games from the CSV to the database
+    
+    app.run(debug=True, port=5000)  # Start the Flask application in debug mode
