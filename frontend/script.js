@@ -55,7 +55,7 @@ async function login(username, password) {
         );
         
         console.log(response);  // Check the response data and status
-        alert(response.data.message);
+        //alert(response.data.message);
         localStorage.setItem('loggedIn', true);
         toggleToMain();
         get_games();
@@ -138,7 +138,7 @@ async function add_game() {
         get_games();
         get_loaned_games();
 
-        alert('Game added successfully!');
+        //alert('Game added successfully!');
     } catch (error) {
         console.error('Error adding game:', error);
         alert('Failed to add game');

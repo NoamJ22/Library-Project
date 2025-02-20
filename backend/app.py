@@ -197,6 +197,6 @@ if __name__ == '__main__':
         db.create_all()  # Create all database tables defined in your models
 
         # Call the add_games_from_csv() function to load the games from the CSV
-        add_games_from_csv()  # This will add games from the CSV to the database
+        # add_games_from_csv()  # This will add games from the CSV to the database
     
     app.run(debug=True, port=5000)  # Start the Flask application in debug mode
