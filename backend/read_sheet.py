@@ -93,6 +93,7 @@ def interact_with_form():
 
                         # Check if a game with this title already exists in the database
                         existing_game = Game.query.filter_by(title=game_data['title']).first()
+                        existing_game = False
 
                         if existing_game:
                             print(f"Game '{game_data['title']}' already exists, skipping.")
