@@ -78,7 +78,7 @@ def interact_with_form():
         # Process CSV and add games
         with app.app_context():
             print("Opening CSV file and processing games...")
-            with open(r'C:\Users\noame\Desktop\pypro\Library-Project\backend\game_data.csv', mode='r') as file:
+            with open(r'C:\Users\noame\Desktop\pypro\games.csv', mode='r') as file:
                 column_headers = ['title', 'genre', 'price', 'quantity']
                 csv_reader = csv.reader(file)  # Use csv.reader instead of DictReader
                 print("column headers")
