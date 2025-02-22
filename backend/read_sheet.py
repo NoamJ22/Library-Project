@@ -113,14 +113,14 @@ def interact_with_form():
                             title_field = wait.until(EC.presence_of_element_located((By.ID, "game-title")))
                             title_field.send_keys(new_game.title)
                             print(f"Entered game title: {new_game.title}")
-                            time.sleep(1)
+                            
 
                             # Wait for the game genre input field and send data
                             print("Waiting for game genre field...")
                             genre_field = wait.until(EC.presence_of_element_located((By.ID, "game-genre")))
                             genre_field.send_keys(new_game.genre)
                             print(f"Entered game genre: {new_game.genre}")
-                            time.sleep(1)
+                            
 
                             # Wait for the game price input field and send data
                             print("Waiting for game price field...")
@@ -134,7 +134,7 @@ def interact_with_form():
                             quantity_field = wait.until(EC.presence_of_element_located((By.ID, "game-quantity")))
                             quantity_field.send_keys(new_game.quantity)
                             print(f"Entered game quantity: {new_game.quantity}")
-                            time.sleep(1)
+                            
 
                             # Wait for the submit button and click it to add the game
                             print("Waiting for submit button to add game...")
@@ -142,7 +142,7 @@ def interact_with_form():
                             game_submit = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[text()="Add Game"]')))
                             game_submit.click()
                             print(f"Game '{new_game.title}' added.")
-                            time.sleep(1)
+                            time.sleep(0.1)
 
                             games_added += 1
 
