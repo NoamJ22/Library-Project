@@ -143,7 +143,7 @@ def interact_with_form():
                             game_submit = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[text()="Add Game"]')))
                             game_submit.click()
                             print(f"Game '{new_game.title}' added.")
-                            time.sleep(0.1)
+                            time.sleep(0.5)
 
                             games_added += 1
 
